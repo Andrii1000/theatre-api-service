@@ -14,7 +14,7 @@ from theatre.models import (
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
-        fields = ("id", "first_name", "last_name", "full_name", "gender")
+        fields = ("id", "first_name", "last_name", "full_name")
 
 
 class GenreSerializer(serializers.ModelSerializer):
