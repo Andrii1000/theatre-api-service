@@ -1,5 +1,5 @@
 from django.db import models
-from rest_framework.authtoken.admin import User
+from django.contrib.auth.models import User
 
 
 class TheatreHall(models.Model):
@@ -52,7 +52,7 @@ class Performance(models.Model):
         ordering = ["-show_time"]
 
     def __str__(self):
-        return f"{self.play.title} {self.show_time}"
+        return f" {self.show_time}"
 
 
 class Reservation(models.Model):
