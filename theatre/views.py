@@ -1,4 +1,5 @@
-from rest_framework import views, viewsets
+from rest_framework import views, viewsets, mixins
+from rest_framework.viewsets import GenericViewSet
 
 from theatre.models import (
     Actor,
@@ -18,7 +19,7 @@ from theatre.serializers import (
     PlayListSerializer,
     PlayDetailSerializer,
     PerformanceDetailSerializer,
-    PerformanceListSerializer,
+    PerformanceListSerializer, ReservationListSerializer,
 )
 
 
@@ -59,9 +60,23 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         return PerformanceSerializer
 
 
-class ReservationViewSet(viewsets.ModelViewSet):
+class ReservationViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    GenericViewSet,
+):
     queryset = Reservation.objects.prefetch_related(
         "tickets__performance__play", "tickets__performance__theatre_hall"
     )
-    serializer_class = ReservationSerializer
 
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
