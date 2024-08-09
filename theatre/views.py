@@ -1,3 +1,4 @@
+from django.db.models import F, Count
 from rest_framework import views, viewsets, mixins
 from rest_framework.viewsets import GenericViewSet
 
@@ -50,7 +51,16 @@ class PlayViewSet(viewsets.ModelViewSet):
 
 
 class PerformanceViewSet(viewsets.ModelViewSet):
-    queryset = Performance.objects.all().select_related("play", "theatre_hall")
+    queryset = (
+        Performance.objects.all()
+        .select_related("play", "theatre_hall")
+        .annotate(
+            tickets_available=(
+                    F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
+                    - Count("tickets")
+            )
+        )
+    )
 
     def get_serializer_class(self):
         if self.action == "list":
