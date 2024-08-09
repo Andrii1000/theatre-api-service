@@ -46,10 +46,31 @@ class PlayListSerializer(PlaySerializer):
 
     class Meta:
         model = Play
-        fields = ("id", "title", "description", "actors", "genres")
+        fields = (
+            "id",
+            "title",
+            "description",
+            "actors",
+            "genres"
+        )
 
     def get_description(self, obj):
         return f"{obj.description[:35]}..."
+
+
+class PlayDetailSerializer(PlaySerializer):
+    actors = ActorSerializer(many=True, read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Play
+        fields = (
+            "id",
+            "title",
+            "description",
+            "actors",
+            "genres"
+        )
 
 
 class TheatreHallSerializer(serializers.ModelSerializer):
