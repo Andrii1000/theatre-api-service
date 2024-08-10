@@ -112,18 +112,34 @@ class PerformanceListSerializer(PerformanceSerializer):
 
 class TicketSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
-        data = super(TicketSerializer, self).validate(attrs=attrs)
+        # Call the parent's validate method
+        data = super().validate(attrs)
+
+        # Ensure that performance is present before trying to access its attributes
+        performance = attrs.get("performance")
+        if not performance:
+            raise serializers.ValidationError("Performance is required.")
+
+        # Ensure that the performance has a theatre_hall associated with it
+        theatre_hall = getattr(performance, "theatre_hall", None)
+        if not theatre_hall:
+            raise serializers.ValidationError("Theatre hall is required.")
+
+        # Perform ticket validation
         Ticket.validate_ticket(
             attrs["row"],
             attrs["seat"],
-            attrs["performance"].theatre_hall,
-            ValidationError,
+            theatre_hall,
+            serializers.ValidationError,
         )
+
         return data
+
+    performance_title = serializers.CharField(source="performance.play.title", read_only=True)
 
     class Meta:
         model = Ticket
-        fields = ("id", "row", "seat", "performance")
+        fields = ("id", "row", "seat", "performance_title")
 
 
 class TicketListSerializer(TicketSerializer):
