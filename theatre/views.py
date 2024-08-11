@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from django.db.models import F, Count
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
@@ -93,6 +95,29 @@ class PlayViewSet(
 
         return queryset.distinct()
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "genres",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by genre id (ex. ?genres=2,5)",
+            ),
+            OpenApiParameter(
+                "actors",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by actor id (ex. ?actors=2,5)",
+            ),
+            OpenApiParameter(
+                "title",
+                type=OpenApiTypes.STR,
+                description="Filter by movie title (ex. ?title=fiction)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
     def get_serializer_class(self):
         if self.action == "list":
             return PlayListSerializer
@@ -135,6 +160,26 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return PerformanceDetailSerializer
         return PerformanceSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "movie",
+                type=OpenApiTypes.INT,
+                description="Filter by movie id (ex. ?movie=2)",
+            ),
+            OpenApiParameter(
+                "date",
+                type=OpenApiTypes.DATE,
+                description=(
+                        "Filter by datetime of MovieSession "
+                        "(ex. ?date=2022-10-23)"
+                ),
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ReservationViewSet(
