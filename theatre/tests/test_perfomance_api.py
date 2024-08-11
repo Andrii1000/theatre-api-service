@@ -67,7 +67,10 @@ class PerformanceViewSetTests(APITestCase):
             theatre_hall=self.theatre_hall,
             show_time="2024-10-15T10:10:00Z",
         )
-        url = reverse("theatre:performance-detail", kwargs={"pk": performance.id})
+        url = reverse(
+            "theatre:performance-detail",
+            kwargs={"pk": performance.id}
+        )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["id"], performance.id)

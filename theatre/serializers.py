@@ -115,7 +115,6 @@ class TicketSerializer(serializers.ModelSerializer):
         # Call the parent's validate method
         data = super().validate(attrs)
 
-        # Ensure that performance is present before trying to access its attributes
         performance = attrs.get("performance")
         if not performance:
             raise serializers.ValidationError("Performance is required.")
@@ -135,7 +134,10 @@ class TicketSerializer(serializers.ModelSerializer):
 
         return data
 
-    performance_title = serializers.CharField(source="performance.play.title", read_only=True)
+    performance_title = serializers.CharField(
+        source="performance.play.title",
+        read_only=True
+    )
 
     class Meta:
         model = Ticket
@@ -155,7 +157,11 @@ class TicketSeatsSerializer(TicketSerializer):
 class PerformanceDetailSerializer(PerformanceSerializer):
     play = PlayListSerializer(many=False, read_only=True,)
     theatre_hall = TheatreHallSerializer(many=False, read_only=True)
-    taken_seats = TicketSeatsSerializer(source="tickets", many=True, read_only=True)
+    taken_seats = TicketSeatsSerializer(
+        source="tickets",
+        many=True,
+        read_only=True
+    )
 
     class Meta:
         model = Performance

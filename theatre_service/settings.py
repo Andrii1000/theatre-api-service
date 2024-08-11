@@ -84,23 +84,23 @@ WSGI_APPLICATION = "theatre_service.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ["POSTGRES_HOST"],
-        "PORT": os.environ["POSTGRES_PORT"],
-        "NAME": os.environ["POSTGRES_DB"],
-        "USER": os.environ["POSTGRES_USER"],
-        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "HOST": os.environ["POSTGRES_HOST"],
+#         "PORT": os.environ["POSTGRES_PORT"],
+#         "NAME": os.environ["POSTGRES_DB"],
+#         "USER": os.environ["POSTGRES_USER"],
+#         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+#     }
+# }
 
 
 # Password validation
@@ -159,8 +159,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Cinema Service API",
-    "DESCRIPTION": "Order cinema tickets",
+    "TITLE": "Theatre Service API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {

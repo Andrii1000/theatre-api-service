@@ -42,5 +42,11 @@ class ActorViewSetTests(APITestCase):
         self.client.force_authenticate(user=self.adminuser)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Actor.objects.get(first_name="Test").first_name, "Test")
-        self.assertEqual(Actor.objects.get(last_name="User").last_name, "User")
+        self.assertEqual(
+            Actor.objects.get(first_name="Test").first_name,
+            "Test"
+        )
+        self.assertEqual(
+            Actor.objects.get(last_name="User").last_name,
+            "User"
+        )

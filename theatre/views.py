@@ -25,7 +25,8 @@ from theatre.serializers import (
     PlayListSerializer,
     PlayDetailSerializer,
     PerformanceDetailSerializer,
-    PerformanceListSerializer, ReservationListSerializer,
+    PerformanceListSerializer,
+    ReservationListSerializer,
 )
 from theatre.permissions import IsAdminOrIfAuthenticatedReadOnly
 
@@ -117,7 +118,6 @@ class PlayViewSet(
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-
     def get_serializer_class(self):
         if self.action == "list":
             return PlayListSerializer
@@ -132,8 +132,8 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         .select_related("play", "theatre_hall")
         .annotate(
             tickets_available=(
-                    F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
-                    - Count("tickets")
+                F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
+                - Count("tickets")
             )
         )
     )
@@ -172,8 +172,8 @@ class PerformanceViewSet(viewsets.ModelViewSet):
                 "date",
                 type=OpenApiTypes.DATE,
                 description=(
-                        "Filter by datetime of MovieSession "
-                        "(ex. ?date=2022-10-23)"
+                    "Filter by datetime of MovieSession "
+                    "(ex. ?date=2022-10-23)"
                 ),
             ),
         ]
